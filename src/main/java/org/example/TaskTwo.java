@@ -230,4 +230,49 @@ Different distributions of item types.
 Large constraints (N = 100,000).
 
 This ensures the best solution with minimal computation. 🚀
+
+
+        // Implement your solution here
+        int totalShelves = shelfItems.length;
+        if (totalShelves == shelvesToRemove) {
+            return 0;
+        }
+
+        Map<Integer, Integer> totalItemFrequency = new HashMap<>();
+
+        for (int item : shelfItems) {
+            totalItemFrequency.put(item, totalItemFrequency.getOrDefault(item, 0) + 1);
+        }
+
+        int maxUniqueItemCount = 0;
+        Map<Integer, Integer> removedShelfFrequency = new HashMap<>();
+
+        for (int i = 0; i < shelvesToRemove; i++) {
+            removedShelfFrequency.put(shelfItems[i], removedShelfFrequency.getOrDefault(shelfItems[i], 0) + 1);
+        }
+
+        for (int removalStartIndex = 0; removalStartIndex + shelvesToRemove <= totalShelves; removalStartIndex++) {
+            if (removalStartIndex > 0) {
+                int shelfToRemoveStart = removalStartIndex - 1;
+                removedShelfFrequency.put(shelfItems[shelfToRemoveStart], removedShelfFrequency.get(shelfItems[shelfToRemoveStart]) - 1);
+                if (removedShelfFrequency.get(shelfItems[shelfToRemoveStart]) == 0) {
+                    removedShelfFrequency.remove(shelfItems[shelfToRemoveStart]);
+                }
+
+                int selfToAddBack = removalStartIndex + shelvesToRemove - 1;
+                if (selfToAddBack < totalShelves) {
+                    removedShelfFrequency.put(shelfItems[selfToAddBack], removedShelfFrequency.getOrDefault(shelfItems[selfToAddBack], 0) + 1);
+                }
+            }
+
+            int remainingUniqueItems = totalItemFrequency.size();
+            for (Map.Entry<Integer, Integer> entry : removedShelfFrequency.entrySet()) {
+                if (totalItemFrequency.get(entry.getKey()) == entry.getValue()) {
+                    remainingUniqueItems--;
+                }
+            }
+            maxUniqueItemCount = Math.max(maxUniqueItemCount, remainingUniqueItems);
+        }
+        return maxUniqueItemCount;
+    }
  */
